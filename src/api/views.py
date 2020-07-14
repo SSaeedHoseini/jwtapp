@@ -20,11 +20,11 @@ class JSONWebTokenAuth(APIView):
     serializer_class = AuthTokenSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.DATA)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            user = serializer.object['user']
+            username = serializer.data['username']
             token = jwt.encode({
-                'username': user.username,
+                'username': username,
                 'iat': datetime.datetime.utcnow(),
                 'nbf': datetime.datetime.utcnow() + datetime.timedelta(minutes=-5),
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7)
