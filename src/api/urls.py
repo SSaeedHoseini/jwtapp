@@ -1,7 +1,8 @@
 """urls for api module"""
 from django.urls import path
-from .views import json_web_token_auth
+from .views import JSONWebTokenAuth, SayHelow
 
 urlpatterns = [
-    path('token/', json_web_token_auth)
+    path('token/', JSONWebTokenAuth.as_view()),
+    path('sayhelow/', SayHelow.as_view())
 ]
