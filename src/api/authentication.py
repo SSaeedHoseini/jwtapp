@@ -8,14 +8,19 @@ from rest_framework.authentication import TokenAuthentication
 
 
 class JSONWebTokenAuthentication(TokenAuthentication):
+    keyword = 'Bearer'
+
     def authenticate_credentials(self, key):
         try:
             payload = jwt.decode(key, settings.SECRET_KEY)
             user = User.objects.get(username=payload['username'])
-        except (jwt.DecodeError, user is None):
+        except (jwt.DecodeError):
             raise exceptions.AuthenticationFailed('Invalid token')
         except jwt.ExpiredSignatureError:
             raise exceptions.AuthenticationFailed('Token has expired')
         if not user.is_active:
             raise exceptions.AuthenticationFailed('User inactive or deleted')
         return (user, payload)
+
+    def authenticate_header(self, request):
+        return self.keyword
